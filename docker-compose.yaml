@@ -23,6 +23,9 @@ services:
         - .:/var/www
       networks:
         - app-network
+      depends_on:
+        app:
+          condition: service_started
 
     db:
       build: .docker/mysql
