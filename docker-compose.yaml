@@ -4,7 +4,7 @@ services:
     app:
       build: .
       container_name: app
-      entrypoint: dockerize -template ./.docker/app/.env:.env -wait tcp://db:3306 -timeout 60s ./.docker/app/entrypoint.sh
+      entrypoint: dockerize -template .docker/app/.env:.env -wait tcp://db:3306 -timeout 60s .docker/app/entrypoint.sh
       volumes:
         - .:/var/www
       networks:
@@ -21,6 +21,8 @@ services:
     nginx:
       build: .docker/nginx
       container_name: nginx
+      command: nginx -g 'daemon off;'
+      entrypoint: dockerize -template .docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
       restart: always
       tty: true
       ports: 
@@ -31,6 +33,9 @@ services:
         - app-network
       depends_on:
         - app
+      environment:
+        - APP_HOST=app
+        - APP_PORT=9000
 
     db:
       build: .docker/mysql

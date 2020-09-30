@@ -11,14 +11,14 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 WORKDIR /var/www
 RUN rm -rf /var/www/html
 
-RUN chown -R www-data:www-data /var/www
+# RUN chown -R www-data:www-data /var/www
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN ln -s public html
 
-RUN usermod -u 1000 www-data
-USER www-data
+# RUN usermod -u 1000 www-data
+# USER www-data
 
 EXPOSE 9000
 ENTRYPOINT [ "php-fpm" ]
