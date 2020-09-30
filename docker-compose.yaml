@@ -1,20 +1,28 @@
-version: '2.3'
+version: '3'
 
 services:
     app:
       build: .
       container_name: app
+      entrypoint: dockerize -template .docker/app/.env:.env -wait tcp://db:3306 -timeout 60s .docker/app/entrypoint.sh
       volumes:
         - .:/var/www
       networks:
         - app-network
       depends_on:
-        db:
-          condition: service_healthy
+        - db
+        - redis
+      environment:
+        - DB_HOST=db
+        - DB_DATABASE=laravel
+        - DB_USERNAME=root
+        - DB_PASSWORD=root
 
     nginx:
       build: .docker/nginx
       container_name: nginx
+      command: nginx -g 'daemon off;'
+      entrypoint: dockerize -template .docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
       restart: always
       tty: true
       ports: 
@@ -24,8 +32,10 @@ services:
       networks:
         - app-network
       depends_on:
-        app:
-          condition: service_started
+        - app
+      environment:
+        - APP_HOST=app
+        - APP_PORT=9000
 
     db:
       build: .docker/mysql
@@ -43,11 +53,6 @@ services:
         - MYSQL_USER=root
       networks:
         - app-network
-      healthcheck:
-          test: ["CMD-SHELL", 'mysql -uroot --database=laravel --password=root --execute="SELECT count(table_name) > 0 FROM information_schema.tables;" --skip-column-names -B']
-          interval: 10s
-          timeout: 10s
-          retries: 6
 
     redis:
       image: redis:alpine
