@@ -1,2 +1,5 @@
 ## Imagem no Docker Hub
-leoviveiros/exercicio-laravel:v1
+leoviveiros/exercicio-laravel:v2
+
+## Desafio Docker
+leoviveiros/codeeducation
