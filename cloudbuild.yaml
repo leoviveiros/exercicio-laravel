@@ -17,7 +17,7 @@ steps:
 
     - id: 'copiando .env'
       name: 'docker'
-      args: ['exec', '-t', 'app', 'cp', '.env', '.env']
+      args: ['exec', '-t', 'app', 'cp', '.env.example', '.env']
 
     - id: 'rodando key:generate'
       name: 'docker'
