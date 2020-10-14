@@ -7,10 +7,6 @@ steps:
       name: 'docker'
       args: ['exec','-u','root','-t','app','chown','-R','www-data:www-data','/var/www']
 
-    - id: 'rodando docker ps'
-      name: 'docker'
-      args: ['ps']
-
     - id: 'rodando composer'
       name: 'docker'
       args: ['exec', '-t', 'app', 'composer', 'install']
